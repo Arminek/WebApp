@@ -1,0 +1,6 @@
+app_product_catalogue:
+    path: /api/product-catalogue
+    methods: [GET]
+    defaults:
+        _controller: app.controller.product_catalogue:searchAction
+        _format: json

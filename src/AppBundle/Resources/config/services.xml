@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="app.consumer.pim" class="AppBundle\Consumer\PimConsumer">
+            <argument type="service" id="simple_bus.event_bus" />
+        </service>
+
+        <service id="app.projector.product" class="AppBundle\Projector\ProductDocumentProjector">
+            <argument type="service" id="es.manager.product_catalogue" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\ProductCreated" method="handleProductCreated" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\ProductDeleted" method="handleProductDeleted" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\ProductUpdated" method="handleProductUpdated" />
+        </service>
+
+        <service id="app.query_factory.empty_criteria" class="AppBundle\Search\Elastic\Factory\Query\EmptyCriteriaQueryFactory" />
+        <service id="app.query_factory.search_criteria" class="AppBundle\Search\Elastic\Factory\Query\MatchProductQueryFactory" />
+        <service id="app.query_factory.product_in_price_range" class="AppBundle\Search\Elastic\Factory\Query\ProductInPriceRangeQueryFactory" />
+        <service id="app.query_factory.sort_by_field" class="AppBundle\Search\Elastic\Factory\Sort\SortByFieldQueryFactory" />
+
+        <service id="lakion_sylius_elastic_search.search_criteria_applicator.empty_criteria" class="AppBundle\Search\Elastic\Applicator\Query\EmptyCriteriaApplicator">
+            <argument type="service" id="app.query_factory.empty_criteria" />
+            <tag name="search_criteria_applicator" />
+        </service>
+
+        <service id="app.search_criteria_applicator.search_criteria" class="AppBundle\Search\Elastic\Applicator\Query\MatchProductApplicator">
+            <argument type="service" id="app.query_factory.search_criteria" />
+            <tag name="search_criteria_applicator" />
+        </service>
+
+        <service id="app.search_criteria_applicator.product_in_price_range" class="AppBundle\Search\Elastic\Applicator\Filter\ProductInPriceRangeApplicator">
+            <argument type="service" id="app.query_factory.product_in_price_range" />
+            <tag name="search_criteria_applicator" />
+        </service>
+
+        <service id="app.search_criteria_applicator.sort_by_field" class="AppBundle\Search\Elastic\Applicator\Sort\SortByFieldApplicator">
+            <argument type="service" id="app.query_factory.sort_by_field" />
+            <tag name="search_criteria_applicator" />
+        </service>
+
+        <service id="app.search.elastic_engine" class="AppBundle\Search\Elastic\ElasticSearchEngine">
+            <argument type="service" id="es.manager.product_catalogue" />
+        </service>
+
+        <service id="app.controller.product_catalogue" class="AppBundle\Controller\ProductCatalogueController">
+            <argument type="service" id="app.search.elastic_engine" />
+            <argument type="service" id="fos_rest.view_handler.default" />
+        </service>
+    </services>
+</container>
