@@ -47,7 +47,6 @@ final class ElasticSearchEngineSpec extends ObjectBehavior
         ]);
 
         $repository->findArray($search)->willReturn($result);
-        $result->getRaw()->willReturn([]);
 
         $this->match(Criteria::fromQueryParameters('product', ['name' => 'banana']))->shouldBeLike(new ArrayResult([]));
     }
@@ -75,8 +74,7 @@ final class ElasticSearchEngineSpec extends ObjectBehavior
         ]);
 
         $repository->findArray($search)->willReturn($result);
-        $result->getRaw()->willReturn(['product']);
 
-        $this->match($criteria)->shouldBeLike(new ArrayResult(['product']));
+        $this->match($criteria)->shouldBeLike(new ArrayResult([]));
     }
 }

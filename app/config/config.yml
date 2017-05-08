@@ -90,11 +90,11 @@ old_sound_rabbit_mq:
             connection_timeout: 3
             read_write_timeout: 3
     consumers:
-        pim:
+        app:
             connection: default
-            exchange_options: {name: 'pim', type: fanout}
-            queue_options: {name: 'pim-queue'}
-            callback: app.consumer.pim
+            exchange_options: {name: 'store', type: fanout}
+            queue_options: {name: 'store'}
+            callback: app.consumer
 
 fos_rest:
     disable_csrf_role: ROLE_API
@@ -112,3 +112,10 @@ jms_serializer:
             app:
                 namespace_prefix: "AppBundle"
                 path: "@AppBundle/Resources/config/serializer"
+
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: redis://localhost

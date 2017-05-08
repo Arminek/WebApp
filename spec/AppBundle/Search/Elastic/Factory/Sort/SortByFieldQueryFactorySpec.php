@@ -40,6 +40,6 @@ final class SortByFieldQueryFactorySpec extends ObjectBehavior
     {
         $ordering = Ordering::fromQueryParameters([]);
 
-        $this->create($ordering)->shouldBeLike(new FieldSort('name', 'asc'));
+        $this->create($ordering)->shouldBeLike(new FieldSort('title', 'asc'));
     }
 }

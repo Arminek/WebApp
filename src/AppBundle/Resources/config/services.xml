@@ -5,7 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="app.consumer.pim" class="AppBundle\Consumer\PimConsumer">
+        <service id="app.consumer" class="AppBundle\Consumer\AppConsumer">
             <argument type="service" id="simple_bus.event_bus" />
         </service>
 
@@ -16,12 +16,22 @@
             <tag name="event_subscriber" subscribes_to="AppBundle\Event\ProductUpdated" method="handleProductUpdated" />
         </service>
 
+        <service id="app.projector.cart" class="AppBundle\Projector\CartRedisProjector">
+            <argument type="service" id="snc_redis.default" />
+            <argument type="service" id="serializer" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\CartCleared" method="handleCartCleared" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\CartItemAdded" method="handleCartItemAdded" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\CartItemQuantityChanged" method="handleCartItemQuantityChanged" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\CartItemRemoved" method="handleCartItemRemoved" />
+            <tag name="event_subscriber" subscribes_to="AppBundle\Event\CartPickedUp" method="handleCartPickedUp" />
+        </service>
+
         <service id="app.query_factory.empty_criteria" class="AppBundle\Search\Elastic\Factory\Query\EmptyCriteriaQueryFactory" />
         <service id="app.query_factory.search_criteria" class="AppBundle\Search\Elastic\Factory\Query\MatchProductQueryFactory" />
         <service id="app.query_factory.product_in_price_range" class="AppBundle\Search\Elastic\Factory\Query\ProductInPriceRangeQueryFactory" />
         <service id="app.query_factory.sort_by_field" class="AppBundle\Search\Elastic\Factory\Sort\SortByFieldQueryFactory" />
 
-        <service id="lakion_sylius_elastic_search.search_criteria_applicator.empty_criteria" class="AppBundle\Search\Elastic\Applicator\Query\EmptyCriteriaApplicator">
+        <service id="app.search_criteria_applicator.empty_criteria" class="AppBundle\Search\Elastic\Applicator\Query\EmptyCriteriaApplicator">
             <argument type="service" id="app.query_factory.empty_criteria" />
             <tag name="search_criteria_applicator" />
         </service>
@@ -48,6 +58,9 @@
         <service id="app.controller.product_catalogue" class="AppBundle\Controller\ProductCatalogueController">
             <argument type="service" id="app.search.elastic_engine" />
             <argument type="service" id="fos_rest.view_handler.default" />
+        </service>
+        <service id="app.controller.cart" class="AppBundle\Controller\CartController">
+            <argument type="service" id="snc_redis.default" />
         </service>
     </services>
 </container>

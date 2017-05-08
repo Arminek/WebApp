@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new \SimpleBus\SymfonyBridge\SimpleBusCommandBusBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new \Snc\RedisBundle\SncRedisBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

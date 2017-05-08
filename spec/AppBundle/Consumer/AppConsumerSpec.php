@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace spec\AppBundle\Consumer;
 
-use AppBundle\Consumer\PimConsumer;
+use AppBundle\Consumer\AppConsumer;
 use AppBundle\Event\ProductCreated;
 use AppBundle\Event\ProductDeleted;
 use AppBundle\Event\ProductUpdated;
@@ -14,7 +14,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use SimpleBus\Message\Bus\MessageBus;
 
-final class PimConsumerSpec extends ObjectBehavior
+final class AppConsumerSpec extends ObjectBehavior
 {
     function let(MessageBus $eventBus): void
     {
@@ -23,7 +23,7 @@ final class PimConsumerSpec extends ObjectBehavior
 
     function it_is_initializable(): void
     {
-        $this->shouldHaveType(PimConsumer::class);
+        $this->shouldHaveType(AppConsumer::class);
     }
 
     function it_is_amqp_consumer(): void

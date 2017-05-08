@@ -4,3 +4,10 @@ app_product_catalogue:
     defaults:
         _controller: app.controller.product_catalogue:searchAction
         _format: json
+
+app_cart_show:
+    path: /api/cart/{id}
+    methods: [GET]
+    defaults:
+        _controller: app.controller.cart:showAction
+        _format: json
